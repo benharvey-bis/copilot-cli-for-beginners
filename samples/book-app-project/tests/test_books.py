@@ -91,3 +91,47 @@ def test_remove_book_returns_false_for_empty_collection():
     result = collection.remove_book("Dune")
 
     assert result is False
+
+
+def test_find_by_year_range_includes_boundary_years():
+    collection = BookCollection()
+    collection.add_book("Old", "Author", 1949)
+    collection.add_book("Middle", "Author", 1950)
+    collection.add_book("New", "Author", 1951)
+
+    result = collection.find_by_year_range(1949, 1950)
+
+    assert [book.title for book in result] == ["Old", "Middle"]
+
+
+def test_find_by_year_range_excludes_books_outside_range():
+    collection = BookCollection()
+    collection.add_book("Old", "Author", 1948)
+    collection.add_book("New", "Author", 1951)
+
+    result = collection.find_by_year_range(1949, 1950)
+
+    assert result == []
+
+
+def test_find_by_year_range_rejects_reversed_range():
+    collection = BookCollection()
+
+    with pytest.raises(
+        ValueError, match="Start year must be less than or equal to end year"
+    ):
+        collection.find_by_year_range(1950, 1949)
+
+
+def test_find_by_year_range_rejects_non_integer_years():
+    collection = BookCollection()
+
+    with pytest.raises(ValueError, match="Years must be integers"):
+        collection.find_by_year_range("1949", 1950)
+
+
+def test_find_by_year_range_rejects_boolean_years():
+    collection = BookCollection()
+
+    with pytest.raises(ValueError, match="Years must be integers"):
+        collection.find_by_year_range(True, 1950)

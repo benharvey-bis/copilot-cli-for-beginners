@@ -71,6 +71,23 @@ def handle_find() -> None:
     show_books(books)
 
 
+def handle_search_year() -> None:
+    print("\nFind Books by Publication Year\n")
+
+    start_year_str = input("Start year: ").strip()
+    end_year_str = input("End year: ").strip()
+
+    try:
+        start_year = int(start_year_str)
+        end_year = int(end_year_str)
+        books = collection.find_by_year_range(start_year, end_year)
+    except ValueError as e:
+        print(f"\nError: {e}\n")
+        return
+
+    show_books(books)
+
+
 def show_help() -> None:
     print("""
 Book Collection Helper
@@ -80,6 +97,7 @@ Commands:
   add      - Add a new book
   remove   - Remove a book by title
   find     - Find books by author
+  search-year - Find books published between two years
   help     - Show this help message
 """)
 
@@ -91,6 +109,7 @@ COMMAND_HANDLERS: dict[str, CommandHandler] = {
     "add": handle_add,
     "remove": handle_remove,
     "find": handle_find,
+    "search-year": handle_search_year,
     "help": show_help,
 }
 

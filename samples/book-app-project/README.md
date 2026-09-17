@@ -10,6 +10,7 @@ It can add, remove, and list books. Also mark them as read.
 ## Current Features
 
 * Reads books from a JSON file (our database)
+* Searches for books published within a year range
 * Input checking is weak in some areas
 * Some tests exist but probably not enough
 
@@ -31,6 +32,7 @@ It can add, remove, and list books. Also mark them as read.
 python book_app.py list
 python book_app.py add
 python book_app.py find
+python book_app.py search-year
 python book_app.py remove
 python book_app.py help
 ```
@@ -39,6 +41,27 @@ python book_app.py help
 
 ```bash
 python -m pytest tests/
+```
+
+## Search by Year
+
+Use the `search-year` command to find books published between two years:
+
+```bash
+python book_app.py search-year
+```
+
+The app prompts you for a start year and an end year. Both years are
+included in the search, so entering `1950` and `1960` finds books published
+from 1950 through 1960. The start year must not be later than the end year.
+
+For example:
+
+```text
+Find Books by Publication Year
+
+Start year: 1950
+End year: 1960
 ```
 
 ---

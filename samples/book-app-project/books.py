@@ -127,3 +127,26 @@ class BookCollection:
             A list of matching books, which may be empty.
         """
         return [b for b in self.books if b.author.lower() == author.lower()]
+
+    def find_by_year_range(self, start_year: int, end_year: int) -> List[Book]:
+        """Find books published between two years, including both boundaries.
+
+        Raises:
+            ValueError: If either year is not an integer or the range is
+                reversed.
+        """
+        if (
+            not isinstance(start_year, int)
+            or isinstance(start_year, bool)
+            or not isinstance(end_year, int)
+            or isinstance(end_year, bool)
+        ):
+            raise ValueError("Years must be integers.")
+        if start_year > end_year:
+            raise ValueError("Start year must be less than or equal to end year.")
+
+        return [
+            book
+            for book in self.books
+            if start_year <= book.year <= end_year
+        ]
