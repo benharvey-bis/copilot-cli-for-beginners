@@ -26,6 +26,14 @@ def test_add_book():
     assert book.year == 1949
     assert book.read is False
 
+
+def test_add_book_with_empty_title_raises_value_error():
+    collection = BookCollection()
+
+    with pytest.raises(ValueError, match="Book title cannot be empty"):
+        collection.add_book("   ", "George Orwell", 1949)
+
+
 def test_mark_book_as_read():
     collection = BookCollection()
     collection.add_book("Dune", "Frank Herbert", 1965)
@@ -47,7 +55,39 @@ def test_remove_book():
     book = collection.find_book_by_title("The Hobbit")
     assert book is None
 
-def test_remove_book_invalid():
+
+def test_remove_book_matches_title_case_insensitively():
     collection = BookCollection()
+    collection.add_book("The Hobbit", "J.R.R. Tolkien", 1937)
+
+    result = collection.remove_book("tHe HoBbIt")
+
+    assert result is True
+    assert collection.books == []
+
+
+def test_remove_book_does_not_remove_partial_title_match():
+    collection = BookCollection()
+    collection.add_book("Dune", "Frank Herbert", 1965)
+    collection.add_book("Dune Messiah", "Frank Herbert", 1969)
+
+    result = collection.remove_book("Dune Mes")
+
+    assert result is False
+    assert [book.title for book in collection.books] == ["Dune", "Dune Messiah"]
+
+
+def test_remove_book_returns_false_when_book_does_not_exist():
+    collection = BookCollection()
+
     result = collection.remove_book("Nonexistent Book")
+
+    assert result is False
+
+
+def test_remove_book_returns_false_for_empty_collection():
+    collection = BookCollection()
+
+    result = collection.remove_book("Dune")
+
     assert result is False

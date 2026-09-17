@@ -1,12 +1,14 @@
 import sys
-from books import BookCollection
+from collections.abc import Callable, Sequence
+
+from books import Book, BookCollection
 
 
 # Global collection instance
 collection = BookCollection()
 
 
-def show_books(books):
+def show_books(books: Sequence[Book]) -> None:
     """Display books in a user-friendly format."""
     if not books:
         print("No books found.")
@@ -21,12 +23,12 @@ def show_books(books):
     print()
 
 
-def handle_list():
+def handle_list() -> None:
     books = collection.list_books()
     show_books(books)
 
 
-def handle_add():
+def handle_add() -> None:
     print("\nAdd a New Book\n")
 
     title = input("Title: ").strip()
@@ -34,6 +36,9 @@ def handle_add():
     year_str = input("Year: ").strip()
 
     try:
+        if not title:
+            raise ValueError("Book title cannot be empty.")
+
         year = int(year_str) if year_str else 0
         collection.add_book(title, author, year)
         print("\nBook added successfully.\n")
@@ -41,16 +46,23 @@ def handle_add():
         print(f"\nError: {e}\n")
 
 
-def handle_remove():
+def handle_remove() -> None:
     print("\nRemove a Book\n")
 
     title = input("Enter the title of the book to remove: ").strip()
-    collection.remove_book(title)
+    try:
+        if not title:
+            raise ValueError("Book title cannot be empty.")
 
-    print("\nBook removed if it existed.\n")
+        if collection.remove_book(title):
+            print("\nBook removed successfully.\n")
+        else:
+            print("\nBook not found.\n")
+    except ValueError as e:
+        print(f"\nError: {e}\n")
 
 
-def handle_find():
+def handle_find() -> None:
     print("\nFind Books by Author\n")
 
     author = input("Author name: ").strip()
@@ -59,7 +71,7 @@ def handle_find():
     show_books(books)
 
 
-def show_help():
+def show_help() -> None:
     print("""
 Book Collection Helper
 
@@ -72,26 +84,31 @@ Commands:
 """)
 
 
-def main():
+CommandHandler = Callable[[], None]
+
+COMMAND_HANDLERS: dict[str, CommandHandler] = {
+    "list": handle_list,
+    "add": handle_add,
+    "remove": handle_remove,
+    "find": handle_find,
+    "help": show_help,
+}
+
+
+def main() -> None:
     if len(sys.argv) < 2:
         show_help()
         return
 
     command = sys.argv[1].lower()
 
-    if command == "list":
-        handle_list()
-    elif command == "add":
-        handle_add()
-    elif command == "remove":
-        handle_remove()
-    elif command == "find":
-        handle_find()
-    elif command == "help":
-        show_help()
-    else:
+    handler = COMMAND_HANDLERS.get(command)
+    if handler is None:
         print("Unknown command.\n")
         show_help()
+        return
+
+    handler()
 
 
 if __name__ == "__main__":
