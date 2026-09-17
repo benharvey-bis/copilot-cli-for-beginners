@@ -20,6 +20,12 @@
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp"],
       "tools": ["*"]
+    },
+    "book-lookup": {
+      "type": "local",
+      "command": "python",
+      "args": ["./book-lookup-mcp-server/server.py"],
+      "tools": ["*"]
     }
   }
 }
