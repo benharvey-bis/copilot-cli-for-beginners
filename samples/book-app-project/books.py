@@ -121,12 +121,27 @@ class BookCollection:
         return False
 
     def find_by_author(self, author: str) -> List[Book]:
-        """Find all books whose authors match case-insensitively.
+        """Find books by full author name or surname, case-insensitively.
+
+        Searches against the full author string and the final name segment, so
+        a query like ``Orwell`` finds ``George Orwell``.
 
         Returns:
             A list of matching books, which may be empty.
         """
-        return [b for b in self.books if b.author.lower() == author.lower()]
+        normalized_author = (author or "").strip().lower()
+        if not normalized_author:
+            return []
+
+        return [
+            book
+            for book in self.books
+            if book.author.lower() == normalized_author
+            or (
+                book.author.lower().split()
+                and book.author.lower().split()[-1] == normalized_author
+            )
+        ]
 
     def find_by_year_range(self, start_year: int, end_year: int) -> List[Book]:
         """Find books published between two years, including both boundaries.

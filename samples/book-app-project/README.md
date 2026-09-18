@@ -28,14 +28,27 @@ It can add, remove, and list books. Also mark them as read.
 
 ## Running the App
 
+Start the interactive menu by default:
+
+```bash
+python -m pip install -e .
+python book_app.py
+```
+
+You can also run the app with direct commands:
+
 ```bash
 python book_app.py list
 python book_app.py add
 python book_app.py find
 python book_app.py search-year
 python book_app.py remove
+python book_app.py menu
 python book_app.py help
 ```
+
+During an interactive action, type `cancel` at any prompt to return to the
+main menu without saving changes.
 
 ## Running Tests
 
