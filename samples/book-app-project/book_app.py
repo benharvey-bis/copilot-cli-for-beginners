@@ -10,7 +10,6 @@ except ImportError:  # pragma: no cover - platform-specific fallback
 
 from books import Book, BookCollection
 
-
 # Global collection instance
 collection = BookCollection()
 CANCEL_COMMAND = "cancel"

@@ -56,6 +56,27 @@ main menu without saving changes.
 python -m pytest tests/
 ```
 
+## Installing the pre-commit hook
+
+The repository includes a pre-commit hook that runs Ruff, a fast Python
+linter and formatter, followed by the pytest suite before each commit.
+
+From the repository root, install the tools and hook:
+
+```bash
+python -m pip install pre-commit ruff
+pre-commit install
+```
+
+Run all configured checks manually:
+
+```bash
+pre-commit run --all-files
+```
+
+After installation, the checks run automatically when you commit. If a check
+formats a file, stage the changes and commit again.
+
 ## Search by Year
 
 Use the `search-year` command to find books published between two years:

@@ -1,12 +1,14 @@
 import builtins
 import json
-import sys
 import os
+import sys
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pytest
-import books
+
 import book_app
+import books
 from books import BookCollection
 
 
@@ -45,10 +47,12 @@ def test_mark_book_as_read():
     book = collection.find_book_by_title("Dune")
     assert book.read is True
 
+
 def test_mark_book_as_read_invalid():
     collection = BookCollection()
     result = collection.mark_as_read("Nonexistent Book")
     assert result is False
+
 
 def test_remove_book():
     collection = BookCollection()
@@ -187,12 +191,14 @@ def test_save_books_writes_expected_json():
     with open(books.DATA_FILE, "r", encoding="utf-8") as file:
         data = json.load(file)
 
-    assert data == [{
-        "title": "1984",
-        "author": "George Orwell",
-        "year": 1949,
-        "read": False,
-    }]
+    assert data == [
+        {
+            "title": "1984",
+            "author": "George Orwell",
+            "year": 1949,
+            "read": False,
+        }
+    ]
 
 
 def test_validate_title_rejects_non_string_input():
@@ -278,7 +284,9 @@ def test_run_interactive_menu_exits_on_choice_seven(monkeypatch, capsys):
 
 def test_run_interactive_menu_uses_plain_menu_input(monkeypatch):
     calls = []
-    monkeypatch.setattr(builtins, "input", lambda prompt="": calls.append(prompt) or "7")
+    monkeypatch.setattr(
+        builtins, "input", lambda prompt="": calls.append(prompt) or "7"
+    )
     monkeypatch.setattr(book_app, "collection", BookCollection())
 
     book_app.run_interactive_menu()

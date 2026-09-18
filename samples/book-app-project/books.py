@@ -1,6 +1,5 @@
 import json
 from dataclasses import asdict, dataclass
-from typing import List, Optional
 
 DATA_FILE = "data.json"
 
@@ -20,7 +19,7 @@ class BookCollection:
 
     def __init__(self):
         """Create a collection and load its books from disk."""
-        self.books: List[Book] = []
+        self.books: list[Book] = []
         self.load_books()
 
     @staticmethod
@@ -73,11 +72,11 @@ class BookCollection:
         self.save_books()
         return book
 
-    def list_books(self) -> List[Book]:
+    def list_books(self) -> list[Book]:
         """Return all books in insertion order."""
         return self.books
 
-    def find_book_by_title(self, title: str) -> Optional[Book]:
+    def find_book_by_title(self, title: str) -> Book | None:
         """Find a book by case-insensitive title.
 
         Raises:
@@ -120,7 +119,7 @@ class BookCollection:
             return True
         return False
 
-    def find_by_author(self, author: str) -> List[Book]:
+    def find_by_author(self, author: str) -> list[Book]:
         """Find books by full author name or surname, case-insensitively.
 
         Searches against the full author string and the final name segment, so
@@ -143,7 +142,7 @@ class BookCollection:
             )
         ]
 
-    def find_by_year_range(self, start_year: int, end_year: int) -> List[Book]:
+    def find_by_year_range(self, start_year: int, end_year: int) -> list[Book]:
         """Find books published between two years, including both boundaries.
 
         Raises:
@@ -160,8 +159,4 @@ class BookCollection:
         if start_year > end_year:
             raise ValueError("Start year must be less than or equal to end year.")
 
-        return [
-            book
-            for book in self.books
-            if start_year <= book.year <= end_year
-        ]
+        return [book for book in self.books if start_year <= book.year <= end_year]
